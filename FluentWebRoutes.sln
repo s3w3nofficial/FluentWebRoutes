@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentWebRoutes", "FluentWebRoutes\FluentWebRoutes.csproj", "{A56187D4-D08D-40A5-BA1F-F51E9360985F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentWebRoutes.Sample", "FluentWebRoutes.Sample\FluentWebRoutes.Sample.csproj", "{22719F29-2DBB-47F4-9D0A-23621FC23396}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A56187D4-D08D-40A5-BA1F-F51E9360985F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A56187D4-D08D-40A5-BA1F-F51E9360985F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A56187D4-D08D-40A5-BA1F-F51E9360985F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A56187D4-D08D-40A5-BA1F-F51E9360985F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{22719F29-2DBB-47F4-9D0A-23621FC23396}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{22719F29-2DBB-47F4-9D0A-23621FC23396}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{22719F29-2DBB-47F4-9D0A-23621FC23396}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{22719F29-2DBB-47F4-9D0A-23621FC23396}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
