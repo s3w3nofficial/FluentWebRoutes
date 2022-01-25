@@ -1,4 +1,5 @@
 using System.Linq.Expressions;
+using Microsoft.AspNetCore.Mvc;
 
 namespace FluentWebRoutes;
 
@@ -9,7 +10,7 @@ public class RouteFinder : IRouteFinder
     public RouteFinder(LinkGenerator linkGenerator, IHttpContextAccessor httpContextAccessor)
     {
         this._linkGenerator = linkGenerator ?? throw new ArgumentNullException(nameof(linkGenerator));
-        this._context = httpContextAccessor.HttpContext ?? throw new ArgumentNullException(nameof(httpContextAccessor.HttpContext));
+        this._context = httpContextAccessor.HttpContext ?? throw new ArgumentNullException(nameof(httpContextAccessor));
     }
     
     public Uri Link<T>(Expression<Action<T>> method)
@@ -26,7 +27,9 @@ public class RouteFinder : IRouteFinder
 
     private Uri GenerateLink<T>(Invocation invocatitonInfo)
     {
-        var controllerName = typeof(T).ToGenericTypeString().Replace("Controller", "");
+        var controllerName = typeof(T)
+            .ToGenericTypeString()
+            .Replace("Controller", "");
         
         var url = this._linkGenerator
             .GetUriByAction(this._context, 
@@ -49,6 +52,7 @@ public class RouteFinder : IRouteFinder
         var names = callExpression
             .Method
             .GetParameters()
+            .Where(p => p.GetCustomAttributes(false).Any(a => a is FromBodyAttribute) == false)
             .Select(i => i.Name)
             .ToList();
 
@@ -72,19 +76,14 @@ public class RouteFinder : IRouteFinder
         var names = callExpression
             .Method
             .GetParameters()
+            .Where(p => p.GetCustomAttributes(false).Any(a => a is FromBodyAttribute) == false)
             .Select(i => i.Name)
             .ToList();
 
         var result = new Dictionary<string, object>();
-        foreach (var name in names)
-        {
-            foreach (var value in values)
-            {
-                if (name is not null)
-                    result.Add(name, value);
-            }
-        }
-
+        for (var i = 0; i < names.Count; i++)
+            result.Add(names[i]!, values[i]);
+        
         return new Invocation
         {
             ParameterValues = result,

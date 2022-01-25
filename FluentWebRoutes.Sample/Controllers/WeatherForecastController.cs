@@ -35,6 +35,12 @@ public class WeatherForecastController : ControllerBase
         var linkToAsyncTest = this._routeFinder.Link<WeatherForecastController>(
             x => x.AsyncTest(69));
 
+        var linkToTestWithBody = this._routeFinder.Link<WeatherForecastController>(
+            x => x.TestWithBody(10, new WeatherForecast()));
+        
+        var linkToAsyncTestWithBody = this._routeFinder.Link<WeatherForecastController>(
+            x => x.AsyncTestWithBody(10, new WeatherForecast()));
+
         return Ok(new
         {
             Self = new
@@ -56,11 +62,21 @@ public class WeatherForecastController : ControllerBase
             {
                 Rel = new [] { "item" },
                 Href = linkToAsyncTest 
+            },
+            TestWithBody = new
+            {
+                Rel = new [] { "item" },
+                Href = linkToTestWithBody 
+            },
+            AsyncTestWithBody = new
+            {
+                Rel = new [] { "item" },
+                Href = linkToAsyncTestWithBody
             }
         });
     }
 
-    [HttpGet("test/{id:int}")]
+    [HttpGet("test/{id:int}", Name = nameof(Test))]
     public IActionResult Test(int id)
     {
         return Ok(new
@@ -69,7 +85,7 @@ public class WeatherForecastController : ControllerBase
         });
     }
 
-    [HttpGet("asyncTest/{id:int}")]
+    [HttpGet("asyncTest/{id:int}", Name = nameof(AsyncTest))]
     public async Task<IActionResult> AsyncTest(int id)
     {
         var task = Task.FromResult(new
@@ -78,6 +94,19 @@ public class WeatherForecastController : ControllerBase
         });
 
         return Ok(await task);
+    }
+
+    [HttpPut("testWithBody/{id:int}", Name = nameof(TestWithBody))]
+    public IActionResult TestWithBody(int id, [FromBody] WeatherForecast weatherForecast)
+    {
+        return NoContent();
+    }
+    
+    [HttpPut("asyncTestWithBody/{id:int}", Name = nameof(AsyncTestWithBody))]
+    public async Task<IActionResult> AsyncTestWithBody(int id, [FromBody] WeatherForecast weatherForecast)
+    {
+        await Task.CompletedTask;
+        return NoContent();
     }
 
     [HttpGet("weatherForecast", Name = nameof(Get))]

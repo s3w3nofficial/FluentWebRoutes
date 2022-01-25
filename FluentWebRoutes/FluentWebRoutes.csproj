@@ -12,9 +12,10 @@
         <PackageIcon>icon.png</PackageIcon>
         <RepositoryUrl>https://github.com/s3w3nofficial/FluentWebRoutes</RepositoryUrl>
         <IsPackable>true</IsPackable>
+        <PackageVersion>1.0.1</PackageVersion>
     </PropertyGroup>
     
     <ItemGroup>
-        <None Include="images\icon.png" Pack="true" PackagePath="\"/>
+        <None Include="images\icon.png" Pack="true" PackagePath="\" />
     </ItemGroup>
 </Project>
