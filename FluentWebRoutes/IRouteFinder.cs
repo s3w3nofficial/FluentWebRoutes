@@ -4,5 +4,5 @@ namespace FluentWebRoutes;
 
 public interface IRouteFinder
 {
-    Uri Link<T>(HttpContext context, Expression<Action<T>> method);
+    Uri Link<T>(Expression<Action<T>> method);
 }

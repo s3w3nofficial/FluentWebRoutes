@@ -9,6 +9,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddHttpContextAccessor();
+
 builder.Services.AddScoped<IRouteFinder, RouteFinder>();
 
 var app = builder.Build();

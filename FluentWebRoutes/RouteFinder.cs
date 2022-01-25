@@ -4,34 +4,35 @@ namespace FluentWebRoutes;
 
 public class RouteFinder : IRouteFinder
 {
-    private LinkGenerator _linkGenerator;
-    public RouteFinder(LinkGenerator linkGenerator)
+    private readonly LinkGenerator _linkGenerator;
+    private readonly HttpContext _context;
+    public RouteFinder(LinkGenerator linkGenerator, IHttpContextAccessor httpContextAccessor)
     {
-        this._linkGenerator = linkGenerator;
+        this._linkGenerator = linkGenerator ?? throw new ArgumentNullException(nameof(linkGenerator));
+        this._context = httpContextAccessor.HttpContext ?? throw new ArgumentNullException(nameof(httpContextAccessor.HttpContext));
     }
     
-    public Uri Link<T>(HttpContext context, Expression<Action<T>> method)
+    public Uri Link<T>(Expression<Action<T>> method)
     {
         var invocatitonInfo = GetInvocation(method);
         var controllerName = typeof(T).ToGenericTypeString().Replace("Controller", "");
         
         var url = this._linkGenerator
-            .GetUriByAction(context, 
+            .GetUriByAction(this._context, 
                 action: invocatitonInfo.MethodName,
                 controller: controllerName,
                 values: invocatitonInfo.ParameterValues);
+
+        if (url is null)
+            throw new Exception("url generation failed");
         
-        return new Uri(url ?? "");
+        return new Uri(url);
     }
     
     private Invocation GetInvocation<T>(Expression<Action<T>> action)
     {
-        if (!(action.Body is MethodCallExpression))
-        {
-            throw new ArgumentException("Action must be a method call", "action");
-        }
-
-        var callExpression = (MethodCallExpression)action.Body;
+        if (action.Body is not MethodCallExpression callExpression)
+            throw new ArgumentException("Action must be a method call", nameof(action));
 
         var values = callExpression.Arguments.Select(ReduceToConstant).ToArray();
         var names = callExpression
@@ -40,10 +41,15 @@ public class RouteFinder : IRouteFinder
             .Select(i => i.Name)
             .ToList();
 
-        IDictionary<string, object> result = new Dictionary<string, object>();
+        var result = new Dictionary<string, object>();
         foreach (var name in names)
-        foreach (var value in values)
-            result.Add(name, value);
+        {
+            foreach (var value in values)
+            {
+                if (name is not null)
+                    result.Add(name, value);
+            }
+        }
 
         return new Invocation
         {
@@ -52,18 +58,11 @@ public class RouteFinder : IRouteFinder
         };
     }
     
-    private object ReduceToConstant(Expression expression)
+    private static object ReduceToConstant(Expression expression)
     {
         var objectMember = Expression.Convert(expression, typeof(object));
         var getterLambda = Expression.Lambda<Func<object>>(objectMember);
         var getter = getterLambda.Compile();
         return getter();
-    }
-    
-    private class Invocation
-    {
-        public string MethodName { get; set; }
-
-        public IDictionary<string, object> ParameterValues { get; set; }
     }
 }

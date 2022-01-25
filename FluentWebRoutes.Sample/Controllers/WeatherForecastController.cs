@@ -23,13 +23,13 @@ public class WeatherForecastController : ControllerBase
     [HttpGet("navigation", Name = nameof(Navigation))]
     public IActionResult Navigation()
     {
-        var linkToSelf = this._routeFinder.Link<WeatherForecastController>(HttpContext,
+        var linkToSelf = this._routeFinder.Link<WeatherForecastController>(
             x => x.Navigation());
         
-        var link = this._routeFinder.Link<WeatherForecastController>(HttpContext, 
+        var link = this._routeFinder.Link<WeatherForecastController>( 
             x => x.Get());
 
-        var linkToTest = this._routeFinder.Link<WeatherForecastController>(HttpContext,
+        var linkToTest = this._routeFinder.Link<WeatherForecastController>(
             x => x.Test(10));
 
         return Ok(new
