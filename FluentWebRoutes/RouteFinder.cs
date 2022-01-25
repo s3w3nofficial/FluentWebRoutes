@@ -15,6 +15,17 @@ public class RouteFinder : IRouteFinder
     public Uri Link<T>(Expression<Action<T>> method)
     {
         var invocatitonInfo = GetInvocation(method);
+        return GenerateLink<T>(invocatitonInfo);
+    }
+
+    public Uri Link<T>(Expression<Func<T, Task>> method)
+    {
+        var invocatitonInfo = GetInvocation(method);
+        return GenerateLink<T>(invocatitonInfo);
+    }
+
+    private Uri GenerateLink<T>(Invocation invocatitonInfo)
+    {
         var controllerName = typeof(T).ToGenericTypeString().Replace("Controller", "");
         
         var url = this._linkGenerator
@@ -29,7 +40,30 @@ public class RouteFinder : IRouteFinder
         return new Uri(url);
     }
     
-    private Invocation GetInvocation<T>(Expression<Action<T>> action)
+    private static Invocation GetInvocation<T>(Expression<Func<T, Task>> action)
+    {
+        if (action.Body is not MethodCallExpression callExpression)
+            throw new ArgumentException("Action must be a method call", nameof(action));
+
+        var values = callExpression.Arguments.Select(ReduceToConstant).ToList();
+        var names = callExpression
+            .Method
+            .GetParameters()
+            .Select(i => i.Name)
+            .ToList();
+
+        var result = new Dictionary<string, object>();
+        for (var i = 0; i < names.Count; i++)
+            result.Add(names[i]!, values[i]);
+
+        return new Invocation
+        {
+            ParameterValues = result,
+            MethodName = callExpression.Method.Name
+        };
+    }
+    
+    private static Invocation GetInvocation<T>(Expression<Action<T>> action)
     {
         if (action.Body is not MethodCallExpression callExpression)
             throw new ArgumentException("Action must be a method call", nameof(action));

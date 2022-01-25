@@ -30,7 +30,10 @@ public class WeatherForecastController : ControllerBase
             x => x.Get());
 
         var linkToTest = this._routeFinder.Link<WeatherForecastController>(
-            x => x.Test(10));
+            x => x.Test(420));
+        
+        var linkToAsyncTest = this._routeFinder.Link<WeatherForecastController>(
+            x => x.AsyncTest(69));
 
         return Ok(new
         {
@@ -48,6 +51,11 @@ public class WeatherForecastController : ControllerBase
             {
                 Rel = new [] { "item" },
                 Href = linkToTest
+            },
+            AsyncTest = new
+            {
+                Rel = new [] { "item" },
+                Href = linkToAsyncTest 
             }
         });
     }
@@ -59,6 +67,17 @@ public class WeatherForecastController : ControllerBase
         {
             Id = id
         });
+    }
+
+    [HttpGet("asyncTest/{id:int}")]
+    public async Task<IActionResult> AsyncTest(int id)
+    {
+        var task = Task.FromResult(new
+        {
+            Id = id
+        });
+
+        return Ok(await task);
     }
 
     [HttpGet("weatherForecast", Name = nameof(Get))]
