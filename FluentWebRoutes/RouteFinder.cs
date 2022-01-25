@@ -52,7 +52,7 @@ public class RouteFinder : IRouteFinder
         var names = callExpression
             .Method
             .GetParameters()
-            .Where(p => p.GetCustomAttributes(false).Any(a => a is FromBodyAttribute) == false)
+            .Where(p => p.GetCustomAttributes(false).Any(a => a is FromBodyAttribute or FromFormAttribute) == false)
             .Select(i => i.Name)
             .ToList();
 
@@ -76,7 +76,7 @@ public class RouteFinder : IRouteFinder
         var names = callExpression
             .Method
             .GetParameters()
-            .Where(p => p.GetCustomAttributes(false).Any(a => a is FromBodyAttribute) == false)
+            .Where(p => p.GetCustomAttributes(false).Any(a => a is FromBodyAttribute or FromFormAttribute) == false)
             .Select(i => i.Name)
             .ToList();
 
