@@ -5,6 +5,16 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <OutputType>Library</OutputType>
+        <Title>FluentWebRoutes</Title>
+        <Authors>Tomas Pelak</Authors>
+        <Description>Service for generating strongly typed links to ASP.NET Core actions</Description>
+        <PackageProjectUrl>https://github.com/s3w3nofficial/FluentWebRoutes</PackageProjectUrl>
+        <PackageIcon>icon.png</PackageIcon>
+        <RepositoryUrl>https://github.com/s3w3nofficial/FluentWebRoutes</RepositoryUrl>
+        <IsPackable>true</IsPackable>
     </PropertyGroup>
-
+    
+    <ItemGroup>
+        <None Include="images\icon.png" Pack="true" PackagePath="\"/>
+    </ItemGroup>
 </Project>
