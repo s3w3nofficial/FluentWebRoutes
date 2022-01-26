@@ -14,18 +14,21 @@ public class RouteFinder : IRouteFinder
     }
     
     public Uri Link<T>(Expression<Action<T>> method)
+        where T : ControllerBase
     {
         var invocatitonInfo = GetInvocation(method);
         return GenerateLink<T>(invocatitonInfo);
     }
 
     public Uri Link<T>(Expression<Func<T, Task>> method)
+        where T : ControllerBase
     {
         var invocatitonInfo = GetInvocation(method);
         return GenerateLink<T>(invocatitonInfo);
     }
 
     private Uri GenerateLink<T>(Invocation invocatitonInfo)
+        where T : ControllerBase
     {
         var controllerName = typeof(T)
             .ToGenericTypeString()
@@ -44,39 +47,33 @@ public class RouteFinder : IRouteFinder
     }
     
     private static Invocation GetInvocation<T>(Expression<Func<T, Task>> action)
+        where T : ControllerBase
     {
         if (action.Body is not MethodCallExpression callExpression)
             throw new ArgumentException("Action must be a method call", nameof(action));
 
+        return GetInvocationFromMethodCall(callExpression);
+    }
+    
+    private static Invocation GetInvocation<T>(Expression<Action<T>> action)
+        where T : ControllerBase
+    {
+        if (action.Body is not MethodCallExpression callExpression)
+            throw new ArgumentException("Action must be a method call", nameof(action));
+
+        return GetInvocationFromMethodCall(callExpression);
+    }
+
+    private static Invocation GetInvocationFromMethodCall(MethodCallExpression callExpression)
+    {
         var values = callExpression.Arguments.Select(ReduceToConstant).ToList();
         var names = callExpression
             .Method
             .GetParameters()
-            .Where(p => p.GetCustomAttributes(false).Any(a => a is FromBodyAttribute or FromFormAttribute) == false)
-            .Select(i => i.Name)
-            .ToList();
-
-        var result = new Dictionary<string, object>();
-        for (var i = 0; i < names.Count; i++)
-            result.Add(names[i]!, values[i]);
-
-        return new Invocation
-        {
-            ParameterValues = result,
-            MethodName = callExpression.Method.Name
-        };
-    }
-    
-    private static Invocation GetInvocation<T>(Expression<Action<T>> action)
-    {
-        if (action.Body is not MethodCallExpression callExpression)
-            throw new ArgumentException("Action must be a method call", nameof(action));
-
-        var values = callExpression.Arguments.Select(ReduceToConstant).ToArray();
-        var names = callExpression
-            .Method
-            .GetParameters()
-            .Where(p => p.GetCustomAttributes(false).Any(a => a is FromBodyAttribute or FromFormAttribute) == false)
+            .Where(p => p.GetCustomAttributes(false).Any(a => a 
+                is FromBodyAttribute 
+                or FromFormAttribute 
+                or FromServicesAttribute) == false)
             .Select(i => i.Name)
             .ToList();
 

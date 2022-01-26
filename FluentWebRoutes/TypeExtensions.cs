@@ -6,12 +6,12 @@ public static class TypeExtensions
     {
         if (!t.IsGenericType)
             return t.Name;
-        string genericTypeName = t.GetGenericTypeDefinition().Name;
+        var genericTypeName = t.GetGenericTypeDefinition().Name;
         genericTypeName = genericTypeName.Substring(0,
             genericTypeName.IndexOf('`'));
-        string genericArgs = string.Join(",",
+        var genericArgs = string.Join(",",
             t.GetGenericArguments()
-                .Select(ta => ToGenericTypeString(ta)).ToArray());
+                .Select(ToGenericTypeString).ToArray());
         return genericTypeName + "<" + genericArgs + ">";
     }
 }
