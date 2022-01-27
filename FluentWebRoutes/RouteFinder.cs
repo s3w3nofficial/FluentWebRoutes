@@ -1,5 +1,6 @@
 using System.Linq.Expressions;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace FluentWebRoutes;
 
@@ -74,12 +75,24 @@ public class RouteFinder : IRouteFinder
                 is FromBodyAttribute 
                 or FromFormAttribute 
                 or FromServicesAttribute) == false)
+            .Where(p => p.ParameterType != typeof(CancellationToken))
             .Select(i => i.Name)
             .ToList();
 
         var result = new Dictionary<string, object>();
         for (var i = 0; i < names.Count; i++)
-            result.Add(names[i]!, values[i]);
+        {
+            if (values[i] is ValueType)
+                result.Add(names[i]!, values[i]);
+            else
+            {
+                // TODO find a better way to create dictionary from object
+                var json = JsonConvert.SerializeObject(values[i]);
+                var dictionary = JsonConvert.DeserializeObject<Dictionary<string, object>>(json);
+                foreach (var (key, value) in dictionary)
+                    result.Add(key.ToLower(), value);
+            }
+        }
         
         return new Invocation
         {

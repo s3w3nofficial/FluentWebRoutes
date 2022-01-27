@@ -26,20 +26,28 @@ public class WeatherForecastController : BaseController
         var linkToSelf = this._routeFinder.Link<WeatherForecastController>(
             x => x.Navigation());
         
-        var link = this._routeFinder.Link<WeatherForecastController>( 
-            x => x.Get());
-
         var linkToTest = this._routeFinder.Link<WeatherForecastController>(
             x => x.Test(420));
         
         var linkToAsyncTest = this._routeFinder.Link<WeatherForecastController>(
             x => x.AsyncTest(69));
 
-        var linkToTestWithBody = this._routeFinder.Link<WeatherForecastController>(
-            x => x.TestWithBody(10, new WeatherForecast()));
+        var linkToTestWithBody =
+            this._routeFinder.Link<WeatherForecastController>(x => x.TestWithBody(42, new TestBodyObject()));
         
         var linkToAsyncTestWithBody = this._routeFinder.Link<WeatherForecastController>(
-            x => x.AsyncTestWithBody(10, new WeatherForecast()));
+            x => x.AsyncTestWithBody(666, new TestBodyObject()));
+
+        var linkToTestWithQueryObject = this._routeFinder.Link<WeatherForecastController>(x =>
+            x.TestWithQueryObject(new TestQueryObject
+            {
+                Offset = 69,
+                Limit = 420
+            }));
+
+        var linkToTestWithCancellationToken =
+            this._routeFinder.Link<WeatherForecastController>(x =>
+                x.TestWithCancellationToken(new CancellationToken()));
 
         return Ok(new
         {
@@ -47,11 +55,6 @@ public class WeatherForecastController : BaseController
             {
               Rel = new [] { "self" },
               Href = linkToSelf 
-            },
-            GetWeatherForecast = new
-            {
-                Rel = new [] { "collection" },
-                Href = link
             },
             Test = new
             {
@@ -72,6 +75,16 @@ public class WeatherForecastController : BaseController
             {
                 Rel = new [] { "item" },
                 Href = linkToAsyncTestWithBody
+            },
+            TestWithQueryObject = new
+            {
+                Rel = new [] { "item" },
+                Href = linkToTestWithQueryObject 
+            },
+            TestWithCancellationToken = new
+            {
+                Rel = new [] { "item" },
+                Href = linkToTestWithCancellationToken
             }
         });
     }
@@ -97,27 +110,27 @@ public class WeatherForecastController : BaseController
     }
 
     [HttpPut("testWithBody/{id:int}", Name = nameof(TestWithBody))]
-    public IActionResult TestWithBody(int id, [FromBody] WeatherForecast weatherForecast)
+    public IActionResult TestWithBody(int id, [FromBody] TestBodyObject testBodyObject)
     {
         return NoContent();
     }
     
     [HttpPut("asyncTestWithBody/{id:int}", Name = nameof(AsyncTestWithBody))]
-    public async Task<IActionResult> AsyncTestWithBody(int id, [FromBody] WeatherForecast weatherForecast)
+    public async Task<IActionResult> AsyncTestWithBody(int id, [FromBody] TestBodyObject testBodyObject)
     {
         await Task.CompletedTask;
         return NoContent();
     }
 
-    [HttpGet("weatherForecast", Name = nameof(Get))]
-    public IEnumerable<WeatherForecast> Get()
+    [HttpGet("testWithQueryObject", Name = nameof(TestWithQueryObject))]
+    public IActionResult TestWithQueryObject([FromQuery] TestQueryObject query)
     {
-        return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-            {
-                Date = DateTime.Now.AddDays(index),
-                TemperatureC = Random.Shared.Next(-20, 55),
-                Summary = Summaries[Random.Shared.Next(Summaries.Length)]
-            })
-            .ToArray();
+        return Ok(query);
+    }
+
+    [HttpGet("testWithCancellationToken", Name = nameof(TestWithCancellationToken))]
+    public IActionResult TestWithCancellationToken(CancellationToken cancellationToken)
+    {
+        return NoContent();
     }
 }
