@@ -1,53 +1,14 @@
 using System.Linq.Expressions;
+using System.Reflection;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Routing;
 using Newtonsoft.Json;
 
 namespace FluentWebRoutes;
 
-public class RouteFinder : IRouteFinder
+public static class Helpers
 {
-    private readonly LinkGenerator _linkGenerator;
-    private readonly HttpContext _context;
-    public RouteFinder(LinkGenerator linkGenerator, IHttpContextAccessor httpContextAccessor)
-    {
-        this._linkGenerator = linkGenerator ?? throw new ArgumentNullException(nameof(linkGenerator));
-        this._context = httpContextAccessor.HttpContext ?? throw new ArgumentNullException(nameof(httpContextAccessor));
-    }
-    
-    public Uri Link<T>(Expression<Action<T>> method)
-        where T : ControllerBase
-    {
-        var invocatitonInfo = GetInvocation(method);
-        return GenerateLink<T>(invocatitonInfo);
-    }
-
-    public Uri Link<T>(Expression<Func<T, Task>> method)
-        where T : ControllerBase
-    {
-        var invocatitonInfo = GetInvocation(method);
-        return GenerateLink<T>(invocatitonInfo);
-    }
-
-    private Uri GenerateLink<T>(Invocation invocatitonInfo)
-        where T : ControllerBase
-    {
-        var controllerName = typeof(T)
-            .ToGenericTypeString()
-            .Replace("Controller", "");
-        
-        var url = this._linkGenerator
-            .GetUriByAction(this._context, 
-                action: invocatitonInfo.MethodName,
-                controller: controllerName,
-                values: invocatitonInfo.ParameterValues);
-
-        if (url is null)
-            throw new Exception("url generation failed");
-        
-        return new Uri(url);
-    }
-    
-    private static Invocation GetInvocation<T>(Expression<Func<T, Task>> action)
+    public static Invocation GetInvocation<T>(Expression<Func<T, Task>> action)
         where T : ControllerBase
     {
         if (action.Body is not MethodCallExpression callExpression)
@@ -56,7 +17,7 @@ public class RouteFinder : IRouteFinder
         return GetInvocationFromMethodCall(callExpression);
     }
     
-    private static Invocation GetInvocation<T>(Expression<Action<T>> action)
+    public static Invocation GetInvocation<T>(Expression<Action<T>> action)
         where T : ControllerBase
     {
         if (action.Body is not MethodCallExpression callExpression)
@@ -93,11 +54,15 @@ public class RouteFinder : IRouteFinder
                     result.Add(key.ToLower(), value);
             }
         }
-        
+
+        var methodType = callExpression.Method.GetCustomAttributes<HttpMethodAttribute>()
+            .FirstOrDefault()?.HttpMethods.FirstOrDefault() ?? "GET";
+
         return new Invocation
         {
             ParameterValues = result,
-            MethodName = callExpression.Method.Name
+            MethodName = callExpression.Method.Name,
+            MethodType = methodType
         };
     }
     

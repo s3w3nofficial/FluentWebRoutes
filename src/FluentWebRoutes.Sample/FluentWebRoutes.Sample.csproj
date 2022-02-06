@@ -12,6 +12,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\FluentWebRoutes.AspNetCore\FluentWebRoutes.AspNetCore.csproj" />
       <ProjectReference Include="..\FluentWebRoutes\FluentWebRoutes.csproj" />
     </ItemGroup>
 

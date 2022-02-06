@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <OutputType>Library</OutputType>
+        <Title>FluentWebRoutes</Title>
+        <Authors>Tomas Pelak</Authors>
+        <Description>Common helpers for getting info about ASP NET / ASP NET Core actions</Description>
+        <PackageProjectUrl>https://github.com/s3w3nofficial/FluentWebRoutes</PackageProjectUrl>
+        <PackageIcon>icon.png</PackageIcon>
+        <RepositoryUrl>https://github.com/s3w3nofficial/FluentWebRoutes</RepositoryUrl>
+        <IsPackable>true</IsPackable>
+        <PackageVersion>1.0.3</PackageVersion>
+    </PropertyGroup>
+    
+    <ItemGroup>
+        <None Include="images\icon.png" Pack="true" PackagePath="\" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <PackageReference Include="Newtonsoft.Json" Version="11.0.1" />
+    </ItemGroup>
+</Project>

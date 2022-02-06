@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
-using Moq;
 using NUnit.Framework;
 
 namespace FluentWebRoutes.AspNetCore.Tests;
@@ -11,6 +10,12 @@ public class SampleController : ControllerBase
 {
     [HttpGet("test-endpoint", Name = nameof(Test))]
     public IActionResult Test()
+    {
+        return Ok();
+    }
+
+    [HttpPost("test-post-endpoint", Name = nameof(TestPost))]
+    public IActionResult TestPost()
     {
         return Ok();
     }
@@ -65,5 +70,19 @@ public class RouteFinderTests
         
         // Assert
         Assert.AreEqual( "test:Sample", testRoute!.AbsoluteUri);
+    }
+
+    [Test]
+    public void TestGetInvocation()
+    {
+       // Arrange
+       
+       // Act
+       var invocation = Helpers.GetInvocation<SampleController>(x => x.Test());
+       var invocation2 = Helpers.GetInvocation<SampleController>(x => x.TestPost());
+
+       // Assert
+       Assert.AreEqual("GET", invocation.MethodType);
+       Assert.AreEqual("POST", invocation2.MethodType);
     }
 }

@@ -1,3 +1,4 @@
+using FluentWebRoutes.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FluentWebRoutes.Sample.Controllers;

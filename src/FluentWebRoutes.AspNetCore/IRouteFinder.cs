@@ -1,7 +1,7 @@
 using System.Linq.Expressions;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FluentWebRoutes;
+namespace FluentWebRoutes.AspNetCore;
 
 public interface IRouteFinder
 {
