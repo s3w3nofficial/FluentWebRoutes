@@ -12,8 +12,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\FluentWebRoutes.AspNetCore\FluentWebRoutes.AspNetCore.csproj" />
-      <ProjectReference Include="..\FluentWebRoutes\FluentWebRoutes.csproj" />
+        <ProjectReference Include="..\FluentWebRoutes.SourceGenerator\FluentWebRoutes.SourceGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+        <ProjectReference Include="..\FluentWebRoutes\FluentWebRoutes.csproj" />
     </ItemGroup>
 
 </Project>

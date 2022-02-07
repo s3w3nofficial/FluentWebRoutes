@@ -1,5 +1,4 @@
 using FluentWebRoutes;
-using FluentWebRoutes.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,9 +9,9 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddHttpContextAccessor();
+builder.Services.Configure<FluentWebRoutesSettings>(builder.Configuration.GetSection("FluentWebRoutesSettings"));
 
-builder.Services.AddScoped<IRouteFinder, RouteFinder>();
+builder.Services.AddSingleton<IRouteFinder, RouteFinder>();
 
 var app = builder.Build();
 
