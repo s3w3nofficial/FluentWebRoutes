@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -53,6 +54,22 @@ namespace FluentWebRoutes.SourceGenerator.ControllerLinks
 
                         // exclude parameters
                         var actionParameters = action.ParameterList.Parameters
+                            .Where(ap =>
+                            {
+                                if (ap.Type is null)
+                                    return false;
+
+                                /*
+                                var model = Compilation.GetSemanticModel(controller.SyntaxTree);
+                                
+                                if (model.GetTypeInfo(ap.Type).Type.IsValueType)
+                                    return true;
+
+                                return false;
+                                return ap.AttributeLists.Any();
+                                */
+                                return true;
+                            })
                             .Where(ap => ap.Type?.ToString() != nameof(CancellationToken));
 
                         var parameters = string.Join(", ",

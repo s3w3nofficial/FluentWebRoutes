@@ -12,7 +12,7 @@
         <PackageIcon>icon.png</PackageIcon>
         <RepositoryUrl>https://github.com/s3w3nofficial/FluentWebRoutes</RepositoryUrl>
         <IsPackable>true</IsPackable>
-        <PackageVersion>1.0.3</PackageVersion>
+        <PackageVersion>1.0.4</PackageVersion>
     </PropertyGroup>
     
     <ItemGroup>

@@ -44,15 +44,15 @@ public static class Helpers
         var parameters = names.Zip(values, (k, v) => new {k, v})
             .ToDictionary(x => x.k, x => x.v);
 
-        string filledTemplate = null;
+        Dictionary<string, string> routeParameters = null;
         // filter out route parameters
         if (template is not null)
         {
-            var routeParameters = GetRouteParameters(template, parameters);
-            parameters = parameters
-                .Where(p => !routeParameters.Keys.Contains(p.Key))
-                .ToDictionary(x => x.Key, x => x.Value);
-            filledTemplate = FillTemplate(template, routeParameters);
+            routeParameters = GetRouteParameters(template, parameters)
+                .ToDictionary(x => x.Key, x => x.Value.ToString());
+
+            foreach (var rp in routeParameters)
+                parameters.Remove(rp.Key);
         }
 
         var queryParameters = new Dictionary<string, object>();
@@ -79,9 +79,10 @@ public static class Helpers
         {
             ProjectName = projectName,
             ParameterValues = queryParameters,
+            RouteParameterValues = routeParameters,
             ControllerName = typeof(T).Name.Replace("ControllerLink", ""),
             MethodName = callExpression.Method.Name,
-            MethodTemplate = filledTemplate, 
+            MethodTemplate = template, 
             MethodType = methodType
         };
     }
@@ -94,34 +95,11 @@ public static class Helpers
         return getter();
     }
     
-    private static RouteValueDictionary GetDefaults(RouteTemplate parsedTemplate)
-    {
-        var result = new RouteValueDictionary();
-
-        foreach (var parameter in parsedTemplate.Parameters)
-        {
-            if (parameter.DefaultValue != null)
-            {
-                result.Add(parameter.Name, parameter.DefaultValue);
-            }
-        }
-
-        return result;
-    }
-    
     private static Dictionary<string, object> GetRouteParameters(string routeTemplate, Dictionary<string, object> parameters)
     {
         var template = TemplateParser.Parse(routeTemplate);
         return parameters
             .Where(p => template.Parameters.Any(tp => tp.Name == p.Key))
             .ToDictionary(x => x.Key, x => x.Value);
-    }
-    
-    private static string FillTemplate(string routeTemplate, Dictionary<string, object> routeParameters)
-    {
-        foreach (var (key, value) in routeParameters)
-            routeTemplate = routeTemplate.Replace("{" + key + "}", value.ToString());
-
-        return routeTemplate;
     }
 }

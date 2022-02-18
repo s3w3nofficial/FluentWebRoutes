@@ -10,6 +10,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentWebRoutes.SourceGener
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentWebRoutes.SourceGenerator.Sample", "src\FluentWebRoutes.SourceGenerator.Sample\FluentWebRoutes.SourceGenerator.Sample.csproj", "{FA9DACEF-773A-4C8D-8424-B850439527E9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentWebRoutes.AspNetCore", "src\FluentWebRoutes.AspNetCore\FluentWebRoutes.AspNetCore.csproj", "{3ADDD8C6-3ED4-45ED-9957-F22F3DF4B8B4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -28,10 +30,15 @@ Global
 		{FA9DACEF-773A-4C8D-8424-B850439527E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FA9DACEF-773A-4C8D-8424-B850439527E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FA9DACEF-773A-4C8D-8424-B850439527E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3ADDD8C6-3ED4-45ED-9957-F22F3DF4B8B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3ADDD8C6-3ED4-45ED-9957-F22F3DF4B8B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3ADDD8C6-3ED4-45ED-9957-F22F3DF4B8B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3ADDD8C6-3ED4-45ED-9957-F22F3DF4B8B4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{A56187D4-D08D-40A5-BA1F-F51E9360985F} = {631A3297-0B04-4552-9CCE-B2CCEBEF49CE}
 		{60D7D90B-F357-477C-B1A9-640F311326DF} = {631A3297-0B04-4552-9CCE-B2CCEBEF49CE}
 		{FA9DACEF-773A-4C8D-8424-B850439527E9} = {631A3297-0B04-4552-9CCE-B2CCEBEF49CE}
+		{3ADDD8C6-3ED4-45ED-9957-F22F3DF4B8B4} = {631A3297-0B04-4552-9CCE-B2CCEBEF49CE}
 	EndGlobalSection
 EndGlobal

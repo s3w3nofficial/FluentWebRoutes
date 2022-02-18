@@ -1,4 +1,5 @@
 using FluentWebRoutes;
+using FluentWebRoutes.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 

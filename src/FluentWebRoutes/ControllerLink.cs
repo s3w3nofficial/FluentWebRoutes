@@ -1,6 +1,6 @@
 namespace FluentWebRoutes;
 
-public class ControllerLink
+public class ControllerLink 
 {
     
 }
